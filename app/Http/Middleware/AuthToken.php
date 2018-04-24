@@ -13,7 +13,10 @@ class AuthToken
         if($user){
             return $next($request);
         }else{
-            abort(401);
+            return response()->json([
+                'code' => 401,
+                'message' => "用户未认证！",
+            ]);
         }
     }
 }
