@@ -30,4 +30,6 @@ $router->group(['middleware' => 'authToken'], function () use ($router) {
   $router->post('car', 'CarController@createCar');
 
   $router->get('cars', 'CarController@carList');
+
+  $router->post('carUpdate', 'CarController@updateCar');
 });

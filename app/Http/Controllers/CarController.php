@@ -56,4 +56,47 @@ class CarController extends Controller
             'response' => $cars,
         ]);
     }
+
+    public function updateCar(Request $request) {
+        $this->validate($request, [
+            'carId' => 'required',
+        ]);
+
+        $updateConfig = array();
+
+        if ($request->has('carNumber')) {
+            $updateConfig['car_number'] = $request->input('carNumber');
+        }
+
+        if ($request->has('userName')) {
+            $updateConfig['user_name'] = $request->input('userName');
+        }
+
+        if ($request->has('checkAt')) {
+            // 时间戳转换为时间
+            $dt = new DateTime();
+            $dt->setTimestamp((int)$request->input('checkAt'));
+            $updateConfig['check_at'] = $dt->format('Y-m-d H:i:s');
+        }
+
+        if ($request->has('phone')) {
+            $updateConfig['phone'] = $request->input('phone');
+        }
+
+        if ($request->has('liked')) {
+            $updateConfig['liked'] = $request->input('liked');
+        }
+
+        $carId = Car::where('id', '=', $request->input('carId'))->update($updateConfig);
+
+        if ($carId === 0) {
+            return response()->json([
+                'message' => '该车辆不存在！',
+            ]);
+        }
+
+        return response()->json([
+            'response' => $carId,
+        ]);
+    }
 }
