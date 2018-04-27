@@ -9,7 +9,7 @@ use App\Models\User;
 use App\Models\Image;
 use Illuminate\Support\Facades\Storage;
 
-class CarController extends Controller
+class ImageController extends Controller
 {
     private $salt;
     public function __construct()
@@ -29,7 +29,7 @@ class CarController extends Controller
         $type = $imageFile->getClientMimeType();
 
         abort(401, $type);
-        
+
         if ($type !== 'image/png' && $type !== 'image/jpeg' && $type !== 'image/jpg') {
             return response()->json([
                 'message' => '只能上传图片！',
