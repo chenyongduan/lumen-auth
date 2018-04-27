@@ -27,9 +27,6 @@ class ImageController extends Controller
         $imageFile = $request->file('image');
 
         $type = $imageFile->getClientMimeType();
-
-        abort(401, $type);
-
         if ($type !== 'image/png' && $type !== 'image/jpeg' && $type !== 'image/jpg') {
             return response()->json([
                 'message' => '只能上传图片！',
@@ -62,9 +59,9 @@ class ImageController extends Controller
     public function imageList(Request $request) {
         // 获取用户信息
         $token = $request->header('token');
-        $imageModel = new Image($token);
+        $imageModel = new Image();
         return response()->json([
-            'response' => $imageModel->getImages(),
+            'response' => $imageModel->getImages($token),
         ]);
     }
 }

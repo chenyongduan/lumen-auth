@@ -13,12 +13,7 @@ use App\Models\User;
 class Image extends Model implements AuthenticatableContract, AuthorizableContract
 {
     use Authenticatable, Authorizable;
-
-    public function __construct($token = null)
-    {
-        $this->token = $token;
-    }
-
+    
     /**
      * The attributes that are mass assignable.
      *
@@ -33,8 +28,8 @@ class Image extends Model implements AuthenticatableContract, AuthorizableContra
      */
     protected $hidden = [];
 
-    public function getImages() {
-        $userModel = new User($this->token);
+    public function getImages($token) {
+        $userModel = new User($token);
         $userId = $userModel->getUserId();
         return $this->where("admin_id", "=", $userId)->get();
     }
