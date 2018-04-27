@@ -27,6 +27,7 @@ class ImageController extends Controller
         $imageFile = $request->file('image');
 
         $type = $imageFile->getClientMimeType();
+
         if ($type !== 'image/png' && $type !== 'image/jpeg' && $type !== 'image/jpg') {
             return response()->json([
                 'message' => '只能上传图片！',
@@ -42,7 +43,7 @@ class ImageController extends Controller
         $token = $request->header('token');
         $userModel = new User($token);
         $userInfo = $userModel->getUser();
-        
+
         // 保存图片到public/images/目录下，名字随机生存
         $path = $imageFile->store('images');
 
