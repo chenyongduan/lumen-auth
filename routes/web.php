@@ -17,13 +17,6 @@ $router->get('/', function () use ($router) {
 
 $router->post('users/login', 'UserController@login');
 
-$router->post('users/register', 'UserController@register');
-
-// $router->get('users/info', [
-//   'middleware' => 'authToken',
-//   'uses' => 'UserController@info'
-// ]);
-
 $router->group(['middleware' => 'authToken'], function () use ($router) {
   $router->get('user', 'UserController@userInfo');
 
