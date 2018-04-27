@@ -8,7 +8,9 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Contracts\Auth\Authenticatable as AuthenticatableContract;
 use Illuminate\Contracts\Auth\Access\Authorizable as AuthorizableContract;
 
-class User extends Model implements AuthenticatableContract, AuthorizableContract
+use App\Models\User;
+
+class Image extends Model implements AuthenticatableContract, AuthorizableContract
 {
     use Authenticatable, Authorizable;
 
@@ -22,7 +24,7 @@ class User extends Model implements AuthenticatableContract, AuthorizableContrac
      *
      * @var array
      */
-    protected $fillable = ['admin_name', 'token'];
+    protected $fillable = ['admin_id', 'image_name'];
 
     /**
      * The attributes excluded from the model's JSON form.
@@ -31,12 +33,9 @@ class User extends Model implements AuthenticatableContract, AuthorizableContrac
      */
     protected $hidden = [];
 
-    public function getUser() {
-        return $this->where("token", "=", $this->token)->first();
-    }
-
-    public function getUserId() {
-        $userInfo = $this->where("token", "=", $this->token)->first();
-        return $userInfo->id;
+    public function getImages() {
+        $userModel = new User($this->token);
+        $userId = $userModel->getUserId();
+        return $this->where("admin_id", "=", $userId)->get();
     }
 }
