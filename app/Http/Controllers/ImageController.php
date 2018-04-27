@@ -27,6 +27,9 @@ class CarController extends Controller
         $imageFile = $request->file('image');
 
         $type = $imageFile->getClientMimeType();
+
+        abort(401, $type);
+        
         if ($type !== 'image/png' && $type !== 'image/jpeg' && $type !== 'image/jpg') {
             return response()->json([
                 'message' => '只能上传图片！',
@@ -42,7 +45,7 @@ class CarController extends Controller
         $token = $request->header('token');
         $userModel = new User($token);
         $userInfo = $userModel->getUser();
-        abort(401, $userInfo)
+        
         // 保存图片到public/images/目录下，名字随机生存
         $path = $imageFile->store('images');
 
