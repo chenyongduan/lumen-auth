@@ -33,4 +33,8 @@ class Image extends Model implements AuthenticatableContract, AuthorizableContra
         $userId = $userModel->getUserId();
         return $this->where("admin_id", "=", $userId)->get();
     }
+
+    public function deleteImages($imageName) {
+        return $this->where("image_name", "=", $imageName)->delete();
+    }
 }
