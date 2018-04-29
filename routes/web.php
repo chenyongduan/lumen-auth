@@ -28,5 +28,7 @@ $router->group(['middleware' => 'authToken'], function () use ($router) {
 
   $router->post('uploadImage', 'ImageController@uploadImage');
 
+  $router->post('deleteImage', 'ImageController@deleteImage');
+
   $router->get('imageList', 'ImageController@imageList');
 });

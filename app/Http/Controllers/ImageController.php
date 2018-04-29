@@ -65,4 +65,22 @@ class ImageController extends Controller
             'response' => $imageModel->getImages($token),
         ]);
     }
+
+    public function deleteImage(Request $request) {
+        // 获取用户信息
+        $imageName = $request->input('imageName');
+
+        if(!Storage::delete($imageName)){
+            return response()->json([
+                'response' => '删除失败！',
+            ]);
+        }
+
+        $imageModel = new Image();
+        $imageModel->deleteImage($imageName);
+
+        return response()->json([
+            'response' => '删除成功！',
+        ]);
+    }
 }
