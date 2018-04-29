@@ -53,7 +53,7 @@ class ImageController extends Controller
         $imageModel->save();
 
         return response()->json([
-            'response' => '保存图片成功！',
+		'response' => $path,
         ]);
     }
 
