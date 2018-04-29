@@ -53,7 +53,7 @@ class ImageController extends Controller
         $imageModel->save();
 
         return response()->json([
-            'response' => '保存图片成功！',
+            'response' => $path,
         ]);
     }
 
@@ -77,10 +77,10 @@ class ImageController extends Controller
         }
 
         $imageModel = new Image();
-        $imageModel->deleteImage($imageName);
+        $ret = $imageModel->deleteImage($imageName);
 
         return response()->json([
-            'response' => '删除成功！',
+            'response' => $ret,
         ]);
     }
 }
