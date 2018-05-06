@@ -34,6 +34,7 @@ class CarController extends Controller
         $car->admin_id = $user->id;
         $car->car_number = $request->input('carNumber');
         $car->user_name = $request->input('userName');
+        $car->phone = $request->input('phone');
         $car->check_at = $dt->format('Y-m-d H:i:s');
 
         if($car->save()){
