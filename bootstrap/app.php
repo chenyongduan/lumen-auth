@@ -41,7 +41,7 @@ $app->routeMiddleware([
 
 $app->register(App\Providers\AppServiceProvider::class);
 $app->register(App\Providers\AuthServiceProvider::class);
-$app->register(Grohiro\LaravelCamelCaseJson\CamelCaseJsonResponseServiceProvider::class);
+// $app->register(Grohiro\LaravelCamelCaseJson\CamelCaseJsonResponseServiceProvider::class);
 
 $app->configure('filesystems');
 
