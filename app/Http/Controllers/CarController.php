@@ -31,11 +31,11 @@ class CarController extends Controller
         $dt->setTimestamp((int)$request->input('checkAt'));
 
         $car = new Car;
-        $car->admin_id = $user->id;
-        $car->car_number = $request->input('carNumber');
-        $car->user_name = $request->input('userName');
-        $car->phone = $request->input('phone');
-        $car->check_at = $dt->format('Y-m-d H:i:s');
+        $car->setAdminName($user->id);
+        $car->setCarNumber($request->input('carNumber'));
+        $car->setUserName($request->input('userName'));
+        $car->setPhone($request->input('phone'));
+        $car->setCheckAt($request->input('checkAt'));
 
         if($car->save()){
             return response()->json([

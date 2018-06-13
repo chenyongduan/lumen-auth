@@ -32,4 +32,30 @@ class Car extends Model implements AuthenticatableContract, AuthorizableContract
      * @var array
      */
     protected $hidden = [];
+
+    public function setAdminId($value) {
+        $this->admin_id = $value;
+    }
+
+    public function setCarNumber($value) {
+        $this->car_number = $value;
+    }
+
+    public function setUserName($value) {
+        $this->user_name = $value;
+    }
+
+    public function setPhone($value) {
+        $this->phone = $value;
+    }
+
+    public function setLiked($value) {
+        $this->liked = $value;
+    }
+
+    public function setCheckAt($value) {
+        $dt = new DateTime();
+        $dt->setTimestamp((int)$value);
+        $this->check_at = $dt->format('Y-m-d H:i:s');
+    }
 }

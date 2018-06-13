@@ -1,12 +1,12 @@
-https://www.cnblogs.com/duanweishi/p/6151721.html
+# https://www.cnblogs.com/duanweishi/p/6151721.html
 
-// 数据表
+# 数据表
 1.创建数据表文件：php artisan make:migration create_images_table --create=images
 2.修改database->migrations->create_images_table文件
 3.创建库迁移：php artisan migrate
 4.数据库回迁：php artisan migrate:reset
 
-// nginx
+# nginx
 
 1.配置目录/etc/nginx/nginx.conf
 2.日志目录/var/log/nginx/error.log
@@ -43,12 +43,16 @@ https://www.cnblogs.com/duanweishi/p/6151721.html
         ssl_prefer_server_ciphers on;
     }
 
-// php
+# php
 1.需要启动php-fpm
 
-// mysql
+# mysql
 1.登录：mysql -u root -p
-2.查看数据库： show databases;
-3.查看数据表： show tables；
-4.进入数据库：use “database name”;
-5.刷新： flush privileges;
+2.查看数据库：show databases;
+3.查看数据表：show tables；
+4.进入数据库：use "database name";
+5.刷新：flush privileges;
+
+# phpmyadmin 
+bug: count():Parameter must be an array or an object that implements Countable;
+fix: Edit file '/usr/share/phpmyadmin/libraries/sql.lib.php' Replace: (count($analyzed_sql_results['select_expr'] == 1) With: (count($analyzed_sql_results['select_expr']) == 1
