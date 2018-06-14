@@ -20,8 +20,9 @@ class CreateCarsTable extends Migration
             $table->string('user_name');
             $table->string('phone');
             $table->integer('liked');
-            $table->timestamp('check_at');
-            $table->timestamps();
+            $table->dateTime('check_at');
+            $table->timestamp('updated_at')->useCurrent();
+            $table->timestamp('created_at');
         });
     }
 

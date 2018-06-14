@@ -7,7 +7,9 @@ use Illuminate\Http\Request;
 use Laravel\Lumen\Routing\Controller as BaseController;
 use App\Models\User;
 use App\Models\Car;
+use App\Exceptions\CarNotExistException;
 use Illuminate\Support\Facades\Storage;
+use Illuminate\Http\JsonResponse;
 
 class CarController extends Controller
 {
@@ -24,14 +26,18 @@ class CarController extends Controller
             'checkAt' => 'required',
         ]);
         
+        $car = Car::where("car_number", "=", $request->input('carNumber'))->first();
+        if ($car) {
+            return response()->json([
+                'message' => "已有该车牌号的车辆信息！",
+            ]);
+        }
+
         // 获取用户信息
         $user = User::where("token", "=", $request->header('token'))->first();
-        // 时间戳转换为时间
-        $dt = new DateTime();
-        $dt->setTimestamp((int)$request->input('checkAt'));
 
         $car = new Car;
-        $car->setAdminName($user->id);
+        $car->setAdminId($user->id);
         $car->setCarNumber($request->input('carNumber'));
         $car->setUserName($request->input('userName'));
         $car->setPhone($request->input('phone'));
@@ -51,54 +57,52 @@ class CarController extends Controller
     public function carList(Request $request) {
         // 获取用户信息
         $user = User::where("token", "=", $request->header('token'))->first();
-
         $cars = Car::where('admin_id', '=', $user->id)->paginate(10);
-        $cars[0]->createAt = $cars[0]->created_at->timestamp;
+        $result = [];
+        foreach ($cars as $car) {
+            $result[] = $car->toDisplay();
+        }
         return response()->json([
-            'response' => $cars,
+            'response' => $result,
         ]);
     }
 
-    public function updateCar(Request $request) {
+    public function updateCar(Request $request, $id) {
+        $request->merge(['id' => $id]);
+
         $this->validate($request, [
-            'carId' => 'required',
+            'id' => 'required|integer',
         ]);
+
+        $car = Car::find(intval($id));
+        if (empty($car)) throw new CarNotExistException();
 
         $updateConfig = array();
 
         if ($request->has('carNumber')) {
-            $updateConfig['car_number'] = $request->input('carNumber');
+            $car->setCarNumber($request->input('carNumber'));
         }
 
         if ($request->has('userName')) {
-            $updateConfig['user_name'] = $request->input('userName');
-        }
-
-        if ($request->has('checkAt')) {
-            // 时间戳转换为时间
-            $dt = new DateTime();
-            $dt->setTimestamp((int)$request->input('checkAt'));
-            $updateConfig['check_at'] = $dt->format('Y-m-d H:i:s');
+            $car->setUserNumber($request->input('userName'));
         }
 
         if ($request->has('phone')) {
-            $updateConfig['phone'] = $request->input('phone');
+            $car->setPhone($request->input('phone'));
         }
 
         if ($request->has('liked')) {
-            $updateConfig['liked'] = $request->input('liked');
+            $car->setLiked($request->input('liked'));
         }
 
-        $carId = Car::where('id', '=', $request->input('carId'))->update($updateConfig);
-
-        if ($carId === 0) {
-            return response()->json([
-                'message' => '该车辆不存在！',
-            ]);
+        if ($request->has('checkAt')) {
+            $car->setCheckAt($request->input('checkAt'));
         }
+
+        $car->save();
 
         return response()->json([
-            'response' => $carId,
+            'response' => $car->toDisplay(),
         ]);
     }
 }

@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use DateTime;
 use Illuminate\Auth\Authenticatable;
 use Laravel\Lumen\Auth\Authorizable;
 use Illuminate\Database\Eloquent\Model;
@@ -33,6 +34,40 @@ class Car extends Model implements AuthenticatableContract, AuthorizableContract
      */
     protected $hidden = [];
 
+    protected $dates = ['check_at'];
+
+    public function getId() {
+        return $this->id;
+    }
+
+    public function getAdminId() {
+        return $this->admin_id;
+    }
+
+    public function getCarNumber() {
+        return $this->car_number;
+    }
+
+    public function getUserName()
+    {
+        return $this->user_name;
+    }
+
+    public function getPhone()
+    {
+        return $this->phone;
+    }
+
+    public function getLiked()
+    {
+        return $this->liked;
+    }
+
+    public function getCheckAt()
+    {
+        return $this->check_at;
+    }
+
     public function setAdminId($value) {
         $this->admin_id = $value;
     }
@@ -57,5 +92,18 @@ class Car extends Model implements AuthenticatableContract, AuthorizableContract
         $dt = new DateTime();
         $dt->setTimestamp((int)$value);
         $this->check_at = $dt->format('Y-m-d H:i:s');
+    }
+
+    public function toDisplay()
+    {
+        return [
+            'id' => $this->getId(),
+            'adminId' => $this->getAdminId(),
+            'carNumber' => $this->getCarNumber(),
+            'userName' => $this->getUserName(),
+            'phone' => $this->getPhone(),
+            'liked' => $this->getLiked(),
+            'checkAt' => $this->getCheckAt()->timestamp,
+        ];
     }
 }
