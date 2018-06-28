@@ -7,6 +7,8 @@ use Laravel\Lumen\Auth\Authorizable;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Contracts\Auth\Authenticatable as AuthenticatableContract;
 use Illuminate\Contracts\Auth\Access\Authorizable as AuthorizableContract;
+use Illuminate\Support\Facades\Cache;
+use Illuminate\Support\Facades\Log;
 
 class User extends Model implements AuthenticatableContract, AuthorizableContract
 {
@@ -38,5 +40,15 @@ class User extends Model implements AuthenticatableContract, AuthorizableContrac
     public function getUserId() {
         $userInfo = $this->where("token", "=", $this->token)->first();
         return $userInfo->id;
+    }
+
+    public function getUserIdByToken($token) {
+        if (Cache::has($token)) {
+            return Cache::get($token);
+        }
+        $user = $this->where("token", "=", $token)->first();
+        $userId = $user->id;
+        Cache::forever($token, $userId);
+        return $userId;
     }
 }
