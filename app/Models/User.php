@@ -47,8 +47,12 @@ class User extends Model implements AuthenticatableContract, AuthorizableContrac
             return Cache::get($token);
         }
         $user = $this->where("token", "=", $token)->first();
-        $userId = $user->id;
-        Cache::forever($token, $userId);
-        return $userId;
+        Log::info($user);
+        if ($user) {
+            $userId = $user->id;
+            Cache::forever($token, $userId);
+            return $userId;
+        }
+        return null;
     }
 }
