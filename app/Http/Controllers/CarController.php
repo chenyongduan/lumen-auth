@@ -29,7 +29,7 @@ class CarController extends Controller
         $car = Car::where("car_number", "=", $request->input('carNumber'))->first();
         if ($car) {
             return response()->json([
-                'message' => "已有该车牌号的车辆信息！",
+                'message' => "已添加过该车辆",
             ]);
         }
 
@@ -103,6 +103,22 @@ class CarController extends Controller
 
         return response()->json([
             'response' => $car->toDisplay(),
+        ]);
+    }
+
+    public function searchCar(Request $request) {
+        $this->validate($request, [
+            'carNumber' => 'required|string',
+        ]);
+        $user = new User();
+        $userId = $user->getUserIdByToken($request->header('token'));
+        $cars = Car::where('admin_id', '=', $userId);
+        $result = [];
+        foreach ($cars as $car) {
+            $result[] = $car->toDisplay();
+        }
+        return response()->json([
+            'response' => $result,
         ]);
     }
 }

@@ -9,8 +9,9 @@ class AuthToken
 {
     public function handle($request, Closure $next)
     {
-        $user = User::where("token", "=", $request->header('token'))->first();
-        if($user){
+        $user = new User;
+        $userId = $user->getUserIdByToken($request->header('token'));
+        if($userId){
             return $next($request);
         }else{
             return response()->json([
