@@ -10,6 +10,7 @@ use App\Models\Car;
 use App\Exceptions\CarNotExistException;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Http\JsonResponse;
+use Log;
 
 class CarController extends Controller
 {
@@ -58,6 +59,7 @@ class CarController extends Controller
         // 获取用户信息
         $user = User::where("token", "=", $request->header('token'))->first();
         $cars = Car::where('admin_id', '=', $user->id)->paginate(10);
+        
         $result = [];
         foreach ($cars as $car) {
             $result[] = $car->toDisplay();
@@ -108,11 +110,18 @@ class CarController extends Controller
 
     public function searchCar(Request $request) {
         $this->validate($request, [
-            'carNumber' => 'required|string',
+            'searchValue' => 'required|string',
         ]);
+    
+        $searchValue = $request->input('searchValue');
+        $likeStr = '%'.$searchValue.'%';
+
         $user = new User();
         $userId = $user->getUserIdByToken($request->header('token'));
-        $cars = Car::where('admin_id', '=', $userId);
+        $cars = Car::where('admin_id', '=', $userId)
+        ->where('car_number', 'like', $likeStr)
+        ->orWhere('user_name', 'like', $likeStr)->get();
+        
         $result = [];
         foreach ($cars as $car) {
             $result[] = $car->toDisplay();
