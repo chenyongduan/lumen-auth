@@ -31,6 +31,19 @@ class User extends Model implements AuthenticatableContract, AuthorizableContrac
      */
     protected $hidden = [];
 
+    public function setAdminName($value) {
+        $this->admin_name = $value;
+    }
+
+    public function setPassword($value) {
+        $this->password = $value;
+    }
+
+    public function setToken($value) {
+        $this->token = $value;
+    }
+
+
     public function getUser() {
         return $this->where("token", "=", $this->token)->first();
     }

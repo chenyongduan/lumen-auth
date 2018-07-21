@@ -19,7 +19,7 @@ class Image extends Model implements AuthenticatableContract, AuthorizableContra
      *
      * @var array
      */
-    protected $fillable = ['admin_id', 'image_name'];
+    protected $fillable = ['admin_id', 'car_id', 'image_name'];
 
     /**
      * The attributes excluded from the model's JSON form.

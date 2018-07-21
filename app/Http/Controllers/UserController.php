@@ -17,17 +17,28 @@ class UserController extends Controller
     public function login(Request $request){
         $this->validate($request, [
             'adminName' => 'required',
+            'password' => 'required',
         ]);
-        $user = User::where("admin_name", "=", $request->input('adminName'))->first();
+        
+        $adminName = $request->input('adminName');
+        $password = $request->input('password');
+
+        $user = User::where("admin_name", "=", $adminName)->first();
         if ($user) {
-            // return $user->token;
+            $isLogin = User::where("admin_name", "=", $adminName)->where('password', '=', $password)->exists();
+            if (!$isLogin) {
+                return response()->json([
+                    'message' => '密码错误',
+                ]);
+            } 
             return response()->json([
                 'response' => $user->token,
             ]);
         } else {
             $user = new User;
-            $user->admin_name = $request->input('adminName');
-            $user->token = str_random(60);
+            $user->setAdminName($adminName);
+            $user->setPassword($password);
+            $user->setToken(str_random(60));
 
             if($user->save()){
                 return response()->json([

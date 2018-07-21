@@ -25,7 +25,7 @@ class CarController extends Controller
             'userName' => 'required',
             'checkAt' => 'required',
         ]);
-        
+
         $car = Car::where("car_number", "=", $request->input('carNumber'))->first();
         if ($car) {
             return response()->json([
