@@ -19,6 +19,7 @@ class CreateCarsTable extends Migration
             $table->string('car_number');
             $table->string('user_name');
             $table->string('phone');
+            $table->float('check_price');
             $table->integer('liked');
             $table->dateTime('check_at');
             $table->timestamp('updated_at')->useCurrent();

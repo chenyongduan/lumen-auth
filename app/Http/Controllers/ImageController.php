@@ -18,6 +18,10 @@ class ImageController extends Controller
     }
 
     public function uploadImage(Request $request) {
+        $this->validate($request, [
+            'carId' => 'required',
+        ]);
+
         if (!$request->hasFile('image')) {
             return response()->json([
                 'message' => '图片不存在！',
@@ -50,6 +54,7 @@ class ImageController extends Controller
         $imageModel = new Image;
         $imageModel->admin_id = $userInfo->id;
         $imageModel->image_name = $path;
+        $imageModel->car_id = $request->input('carId');
         $imageModel->save();
 
         return response()->json([
@@ -67,12 +72,15 @@ class ImageController extends Controller
     }
 
     public function deleteImage(Request $request) {
-        // 获取用户信息
+        $this->validate($request, [
+            'imageName' => 'required',
+        ]);
+
         $imageName = $request->input('imageName');
 
         if(!Storage::delete($imageName)){
             return response()->json([
-                'response' => '删除失败！',
+                'message' => '删除失败！',
             ]);
         }
 

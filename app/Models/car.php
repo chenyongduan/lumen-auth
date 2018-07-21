@@ -68,6 +68,11 @@ class Car extends Model implements AuthenticatableContract, AuthorizableContract
         return $this->check_at;
     }
 
+    public function getCheckPrice()
+    {
+        return $this->check_price;
+    }
+
     public function setAdminId($value) {
         $this->admin_id = $value;
     }
@@ -94,6 +99,10 @@ class Car extends Model implements AuthenticatableContract, AuthorizableContract
         $this->check_at = $dt->format('Y-m-d H:i:s');
     }
 
+    public function setCheckPrice($value) {
+        $this->check_price = $value || 0;
+    }
+
     public function toDisplay()
     {
         return [
@@ -102,6 +111,7 @@ class Car extends Model implements AuthenticatableContract, AuthorizableContract
             'carNumber' => $this->getCarNumber(),
             'userName' => $this->getUserName(),
             'phone' => $this->getPhone(),
+            'checkPrice' => $this->getCheckPrice(),
             'liked' => $this->getLiked(),
             'checkAt' => $this->getCheckAt()->timestamp,
         ];

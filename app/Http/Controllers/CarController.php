@@ -42,6 +42,7 @@ class CarController extends Controller
         $car->setCarNumber($request->input('carNumber'));
         $car->setUserName($request->input('userName'));
         $car->setPhone($request->input('phone'));
+        $car->setCheckPrice($request->input('checkPrice'));
         $car->setCheckAt($request->input('checkAt'));
 
         if($car->save()){
@@ -95,6 +96,10 @@ class CarController extends Controller
 
         if ($request->has('liked')) {
             $car->setLiked($request->input('liked'));
+        }
+
+        if ($request->has('checkPrice')) {
+            $car->setCheckPrice($request->input('checkPrice'));
         }
 
         if ($request->has('checkAt')) {
