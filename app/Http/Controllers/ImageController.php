@@ -47,14 +47,16 @@ class ImageController extends Controller
         $token = $request->header('token');
         $userModel = new User($token);
         $userInfo = $userModel->getUser();
-
+        $userId = $userInfo->id;
+        $carId = $request->input('carId');
+        $dir = 'images'.'/'.$userId.'/'.$carId;
         // 保存图片到public/images/目录下，名字随机生存
-        $path = $imageFile->store('images');
+        $path = $imageFile->store($dir);
 
         $imageModel = new Image;
-        $imageModel->admin_id = $userInfo->id;
+        $imageModel->admin_id = $userId;
         $imageModel->image_name = $path;
-        $imageModel->car_id = $request->input('carId');
+        $imageModel->car_id = $carId;
         $imageModel->save();
 
         return response()->json([
@@ -74,9 +76,11 @@ class ImageController extends Controller
     public function deleteImage(Request $request) {
         $this->validate($request, [
             'imageName' => 'required',
+            'carId' => 'required',
         ]);
 
         $imageName = $request->input('imageName');
+        $carId = $request->input('carId');
 
         if(!Storage::delete($imageName)){
             return response()->json([
@@ -85,7 +89,7 @@ class ImageController extends Controller
         }
 
         $imageModel = new Image();
-        $ret = $imageModel->deleteImage($imageName);
+        $ret = $imageModel->deleteImage($carId, $imageName);
 
         return response()->json([
             'response' => $ret,
