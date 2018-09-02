@@ -6,8 +6,10 @@ use DateTime;
 use Illuminate\Auth\Authenticatable;
 use Laravel\Lumen\Auth\Authorizable;
 use Illuminate\Database\Eloquent\Model;
+use App\Models\Image;
 use Illuminate\Contracts\Auth\Authenticatable as AuthenticatableContract;
 use Illuminate\Contracts\Auth\Access\Authorizable as AuthorizableContract;
+use Log;
 
 class Car extends Model implements AuthenticatableContract, AuthorizableContract
 {
@@ -25,6 +27,7 @@ class Car extends Model implements AuthenticatableContract, AuthorizableContract
         'phone',
         'liked',
         'check_at',
+        'check_price',
     ];
 
     /**
@@ -73,6 +76,10 @@ class Car extends Model implements AuthenticatableContract, AuthorizableContract
         return $this->check_price;
     }
 
+    public function setId($value) {
+        $this->id = $value;
+    }
+
     public function setAdminId($value) {
         $this->admin_id = $value;
     }
@@ -100,7 +107,14 @@ class Car extends Model implements AuthenticatableContract, AuthorizableContract
     }
 
     public function setCheckPrice($value) {
-        $this->check_price = $value || 0;
+        $this->check_price = $value | 0;
+    }
+
+    public function getImages() {
+        $userId = $this->getAdminId();
+        $carId = $this->getId();
+        $Image = new Image();
+        return $Image->getImages($userId, $carId);
     }
 
     public function toDisplay()
@@ -114,6 +128,7 @@ class Car extends Model implements AuthenticatableContract, AuthorizableContract
             'checkPrice' => $this->getCheckPrice(),
             'liked' => $this->getLiked(),
             'checkAt' => $this->getCheckAt()->timestamp,
+            'images' => $this->getImages(),
         ];
     }
 }

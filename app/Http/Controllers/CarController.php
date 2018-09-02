@@ -8,6 +8,7 @@ use Laravel\Lumen\Routing\Controller as BaseController;
 use App\Models\User;
 use App\Models\Car;
 use App\Exceptions\CarNotExistException;
+use App\Exceptions\InvalidRequestException;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Http\JsonResponse;
 use Log;
@@ -77,17 +78,20 @@ class CarController extends Controller
             'id' => 'required|integer',
         ]);
 
+        $user = new User();
+        $userId = $user->getUserIdByToken($request->header('token'));
+        
         $car = Car::find(intval($id));
         if (empty($car)) throw new CarNotExistException();
 
-        $updateConfig = array();
+        if ($userId != $car->getAdminId()) throw new InvalidRequestException();
 
         if ($request->has('carNumber')) {
             $car->setCarNumber($request->input('carNumber'));
         }
 
         if ($request->has('userName')) {
-            $car->setUserNumber($request->input('userName'));
+            $car->setUserName($request->input('userName'));
         }
 
         if ($request->has('phone')) {

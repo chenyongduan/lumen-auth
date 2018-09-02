@@ -28,13 +28,22 @@ class Image extends Model implements AuthenticatableContract, AuthorizableContra
      */
     protected $hidden = [];
 
-    public function getImages($token) {
-        $userModel = new User($token);
-        $userId = $userModel->getUserId();
-        return $this->where("admin_id", "=", $userId)->get();
+    public function getImageName() {
+        return $this->image_name;
     }
 
-    public function deleteImage($carId, $imageName) {
-        return $this->where("car_id", "=", $carId)->where("image_name", "=", $imageName)->delete();
+    public function getImages($userId, $carId) {
+        $images = $this->where("admin_id", "=", $userId)->where("car_id", "=", $carId)->get();
+        $result = [];
+        foreach ($images as $image) {
+            $result[] = $image->getImageName();
+        }
+        return $result;
+    }
+
+    public function deleteImage($userId, $carId, $imageName) {
+        return $this->where("admin_id", "=", $userId)
+        ->where("car_id", "=", $carId)
+        ->where("image_name", "=", $imageName)->delete();
     }
 }

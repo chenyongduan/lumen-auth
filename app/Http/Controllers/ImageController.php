@@ -45,9 +45,8 @@ class ImageController extends Controller
 
         // 获取用户信息
         $token = $request->header('token');
-        $userModel = new User($token);
-        $userInfo = $userModel->getUser();
-        $userId = $userInfo->id;
+        $userModel = new User();
+        $userId = $userModel->getUserIdByToken($token);
         $carId = $request->input('carId');
         $dir = 'images'.'/'.$userId.'/'.$carId;
         // 保存图片到public/images/目录下，名字随机生存
@@ -64,14 +63,14 @@ class ImageController extends Controller
         ]);
     }
 
-    public function imageList(Request $request) {
-        // 获取用户信息
-        $token = $request->header('token');
-        $imageModel = new Image();
-        return response()->json([
-            'response' => $imageModel->getImages($token),
-        ]);
-    }
+    // public function imageList(Request $request) {
+    //     // 获取用户信息
+    //     $token = $request->header('token');
+    //     $imageModel = new Image();
+    //     return response()->json([
+    //         'response' => $imageModel->getImages($token),
+    //     ]);
+    // }
 
     public function deleteImage(Request $request) {
         $this->validate($request, [
@@ -79,17 +78,21 @@ class ImageController extends Controller
             'carId' => 'required',
         ]);
 
+        $token = $request->header('token');
+        $userModel = new User();
+        $userId = $userModel->getUserIdByToken($token);
+
         $imageName = $request->input('imageName');
         $carId = $request->input('carId');
 
         if(!Storage::delete($imageName)){
             return response()->json([
-                'message' => '删除失败！',
+                'message' => '图片不存在！',
             ]);
         }
 
         $imageModel = new Image();
-        $ret = $imageModel->deleteImage($carId, $imageName);
+        $ret = $imageModel->deleteImage($userId, $carId, $imageName);
 
         return response()->json([
             'response' => $ret,
