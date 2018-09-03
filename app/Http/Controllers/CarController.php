@@ -48,7 +48,7 @@ class CarController extends Controller
 
         if($car->save()){
             return response()->json([
-                'message' => "添加车辆成功！",
+                'response' => $car->toDisplay(),
             ]);
         } else {
             return response()->json([
@@ -60,7 +60,7 @@ class CarController extends Controller
     public function carList(Request $request) {
         // 获取用户信息
         $user = User::where("token", "=", $request->header('token'))->first();
-        $cars = Car::where('admin_id', '=', $user->id)->paginate(10);
+        $cars = Car::where('admin_id', '=', $user->id)->orderBy('check_at')->paginate(10);
         
         $result = [];
         foreach ($cars as $car) {
@@ -129,7 +129,7 @@ class CarController extends Controller
         $userId = $user->getUserIdByToken($request->header('token'));
         $cars = Car::where('admin_id', '=', $userId)
         ->where('car_number', 'like', $likeStr)
-        ->orWhere('user_name', 'like', $likeStr)->get();
+        ->orWhere('user_name', 'like', $likeStr)->orderBy('check_at')->get();
         
         $result = [];
         foreach ($cars as $car) {
