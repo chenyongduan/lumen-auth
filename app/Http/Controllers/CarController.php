@@ -58,16 +58,32 @@ class CarController extends Controller
     }
 
     public function carList(Request $request) {
+        $this->validate($request, [
+            "pageSize" => "integer|max:100|min:3",
+            "page" => "integer|min:1"
+        ]);
         // 获取用户信息
-        $user = User::where("token", "=", $request->header('token'))->first();
-        $cars = Car::where('admin_id', '=', $user->id)->orderBy('check_at')->paginate(10);
-        
+        $user = new User();
+        $userId = $user->getUserIdByToken($request->header('token'));
+        // 查找所有车辆信息
+        $query = Car::where('admin_id', '=', $userId);
+        // 分页
+        $page = intval($request->input("page", 1));
+        $pageSize = intval($request->input("pageSize", 10));
+        $total = $query->count();
+        $cars = $query->orderBy('check_at')->skip($pageSize * ($page - 1))->take($pageSize)->get();
         $result = [];
         foreach ($cars as $car) {
             $result[] = $car->toDisplay();
         }
+
         return response()->json([
-            'response' => $result,
+            'response' => [
+                'total' => $total,
+                'page' => $page,
+                'pageSize' => $pageSize,
+                'result' => $result
+            ],
         ]);
     }
 
