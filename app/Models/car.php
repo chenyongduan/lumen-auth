@@ -9,11 +9,12 @@ use Illuminate\Database\Eloquent\Model;
 use App\Models\Image;
 use Illuminate\Contracts\Auth\Authenticatable as AuthenticatableContract;
 use Illuminate\Contracts\Auth\Access\Authorizable as AuthorizableContract;
+use Illuminate\Database\Eloquent\SoftDeletes;
 use Log;
 
 class Car extends Model implements AuthenticatableContract, AuthorizableContract
 {
-    use Authenticatable, Authorizable;
+    use Authenticatable, Authorizable, SoftDeletes;
 
     /**
      * The attributes that are mass assignable.
@@ -30,14 +31,11 @@ class Car extends Model implements AuthenticatableContract, AuthorizableContract
         'check_price',
     ];
 
-    /**
-     * The attributes excluded from the model's JSON form.
-     *
-     * @var array
-     */
-    protected $hidden = [];
+    protected $table = 'cars';
+    protected $primaryKey = 'id';
 
-    protected $dates = ['check_at'];
+    protected $dates = ['check_at', 'deleted_at'];
+    protected $guarded = ['id'];
 
     public function getId() {
         return $this->id;

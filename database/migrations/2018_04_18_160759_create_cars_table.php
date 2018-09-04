@@ -24,6 +24,7 @@ class CreateCarsTable extends Migration
             $table->dateTime('check_at');
             $table->timestamp('updated_at')->useCurrent();
             $table->timestamp('created_at');
+            $table->softDeletes();
         });
     }
 

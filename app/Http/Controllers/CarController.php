@@ -155,4 +155,24 @@ class CarController extends Controller
             'response' => $result,
         ]);
     }
+
+    public function deleteCar(Request $request, $id) {
+        $request->merge(['id' => $id]);
+
+        $this->validate($request, [
+            'id' => 'required|integer',
+        ]);
+    
+        $user = new User();
+        $userId = $user->getUserIdByToken($request->header('token'));
+        
+        $deleteRet = Car::where('admin_id', '=', $id)->where('id', '=', $id)->delete();
+        if (!$deleteRet) {
+            throw new CarNotExistException();
+        }
+
+        return response()->json([
+            'response' => $id,
+        ]);
+    }
 }

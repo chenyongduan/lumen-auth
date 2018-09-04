@@ -28,6 +28,8 @@ $router->group(['middleware' => 'authToken'], function () use ($router) {
 
   $router->post('updateCar/{id}', 'CarController@updateCar');
 
+  $router->post('deleteCar/{id}', 'CarController@deleteCar');
+
   $router->post('uploadImage', 'ImageController@uploadImage');
 
   $router->post('deleteImage', 'ImageController@deleteImage');
